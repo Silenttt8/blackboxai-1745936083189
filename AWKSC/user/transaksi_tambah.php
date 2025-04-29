@@ -1,51 +1,48 @@
-<?php
-	include 'header.php';
-	include '../koneksi.php'; 
-?>
+<?php include 'header.php'; ?>
 
+<?php 
+include '../koneksi.php';
+?>
 <div class="container">
 	<div class="panel">
 		<div class="panel-heading">
-			<h4>Transaksi Penyewaan Lapangan</h4>
+			<h4>Pesan Lapangan</h4>
 		</div>
 		<div class="panel-body">
-
-			
-
 			<div class="col-md-8 col-md-offset-2">
 				<a href="transaksi.php" class="btn btn-sm btn-info pull-right">Kembali</a>
-				<br/>
-				<br/>
-				<form method="post" action="transaksi_aksi.php">
+				<br/><br/>
+				<form method="post" action="transaksi_aksi.php" enctype="multipart/form-data">
 					<div class="form-group">
-						<label>Pelanggan</label>
-						<input type="text" class="form-control" id="pelanggan_pelanggan" name="pelanggan_pelanggan" required="required" value="<?php echo $_SESSION['username']; ?>" readonly>		
-					</div>	
-					
-					<div class="form-group">
-						<label>tanggal</label>
-						<input type="date" class="form-control" id="tanggal" name="tanggal" required="required">
+						<label>Tanggal Main</label>
+						<input type="date" class="form-control" name="tanggal" required="required">
 					</div>	
 
 					<div class="form-group">
-						<label>Jam Mulai</label>
-						<input type="time" class="form-control" id="jam_mulai" name="jam_mulai" required="required">
-					</div>	
+						<label>Durasi (Jam)</label>
+						<input type="number" class="form-control" name="durasi" min="1" max="5" placeholder="Masukkan durasi dalam jam" required="required">
+					</div>
 
 					<div class="form-group">
-						<label>Durasi Waktu</label>
-						<input type="number" class="form-control" id="durasi" name="durasi" placeholder="Durasi Waktu .." required="required">
-					</div>	
-					<div class="form-group">
-						<label>Status</label>
-						<select class="form-control" id="lap" name="lap">	
-							<option value="0">Booking</option>
-						</select>				
-					</div>	
+						<label>Metode Pembayaran</label>
+						<select class="form-control" name="metode_pembayaran" id="metode_pembayaran" required>
+							<option value="">- Pilih Metode Pembayaran -</option>
+							<option value="DANA">DANA - 085123456789</option>
+							<option value="OVO">OVO - 085123456789</option>
+							<option value="GOPAY">GOPAY - 085123456789</option>
+						</select>
+					</div>
+
+					<div class="form-group" id="bukti_pembayaran_div">
+						<label>Bukti Pembayaran</label>
+						<input type="file" class="form-control" name="bukti_pembayaran" accept="image/*">
+						<small class="text-muted">Upload bukti transfer pembayaran (format: jpg, png)</small>
+					</div>
+
 					<br/>
-                    <input type="submit" class="btn btn-primary" value="Booking">
+					<input type="submit" class="btn btn-primary" value="Pesan Sekarang">
+				</form>
 			</div>
-
 		</div>
 	</div>
 </div>
