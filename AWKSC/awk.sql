@@ -62,7 +62,9 @@ CREATE TABLE `transaksi` (
   `transaksi_durasi` int(11) NOT NULL,
   `transaksi_jam_selesai` time NOT NULL,
   `transaksi_status` int(11) NOT NULL,
-  `transaksi_lap` int(11) NOT NULL
+  `transaksi_lap` int(11) NOT NULL,
+  `metode_pembayaran` varchar(50) DEFAULT NULL,
+  `bukti_pembayaran` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
