@@ -1,62 +1,29 @@
 <?php 
-include '../koneksi.php';
-session_start();
+// menghubungkan dengan koneksi
+include '../koneksi.php'; 
+$transaksi_pelanggan = $_POST['pelanggan_pelanggan'];
+$transaksi_tgl = $_POST['tanggal'];
+$transaksi_durasi = $_POST['durasi'];
+$jam_mulai = $_POST['jam_mulai'];
+//$transaksi_status =  $_POST['status'];
+$transaksi_lap = $_POST['lap'];
 
-// menangkap data yang dikirim dari form
-$tanggal = $_POST['tanggal'];
-$durasi = $_POST['durasi'];
-$metode_pembayaran = $_POST['metode_pembayaran'];
-$pelanggan = $_SESSION['username']; // ambil username yang login
-
-// set timezone dan waktu
 date_default_timezone_set('Asia/Jakarta');
-$jam_pemesanan = date('Y-m-d H:i:s');
-$jam_mulai = "08:00:00"; // default jam mulai
-$jam_selesai = date('H:i:s',strtotime("$jam_mulai +$durasi hour"));
+$transaksi_jam_pemesanan = date('Y-m-d H:i:s');
+$transaksi_jam_selesai = date('H:i:s',strtotime("$jam_mulai, +$transaksi_durasi hour"));
 
-// ambil harga per jam
-$h = mysqli_query($koneksi,"select harga_per_jam from harga");
-$harga = mysqli_fetch_assoc($h);
-$total_harga = $durasi * $harga['harga_per_jam'];
+$tgl_hari_ini = date('Y-m-d');
+$h = mysqli_query($koneksi,"SELECT harga_per_jam from harga");
+$harga_per_jam = mysqli_fetch_assoc($h);
 
-// upload bukti pembayaran
-$bukti_pembayaran = "";
-if(isset($_FILES['bukti_pembayaran'])){
-    $file = $_FILES['bukti_pembayaran'];
-    $target_dir = "../uploads/";
-    
-    // buat folder jika belum ada
-    if(!file_exists($target_dir)){
-        mkdir($target_dir, 0777, true);
-    }
-    
-    // generate nama file unik
-    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $filename = 'bukti_' . time() . '.' . $ext;
-    $target_file = $target_dir . $filename;
-    
-    // upload file
-    if(move_uploaded_file($file["tmp_name"], $target_file)){
-        $bukti_pembayaran = $filename;
-    }
+$transaksi_harga = $transaksi_durasi * $harga_per_jam['harga_per_jam'];
+
+//Jam boking tidak dapat sama
+$tambah=mysqli_query($koneksi,"INSERT into transaksi values('','$transaksi_jam_pemesanan','$transaksi_tgl','$transaksi_pelanggan','$jam_mulai','$transaksi_harga','$transaksi_durasi','$transaksi_jam_selesai','0','$transaksi_lap')");
+$sql=mysqli_query($koneksi,"SELECT max(transaksi_id) as id from transaksi");
+while($data=mysqli_fetch_array($sql)){
+	$id_terakhir=$data['id'];
 }
-
-// simpan ke database
-mysqli_query($koneksi,"insert into transaksi values(
-    '',
-    '$jam_pemesanan',
-    '$tanggal',
-    '$pelanggan',
-    '$jam_mulai',
-    '$total_harga',
-    '$durasi',
-    '$jam_selesai',
-    '0',
-    '0',
-    '$metode_pembayaran',
-    '$bukti_pembayaran'
-)");
-
-// redirect ke halaman transaksi
-header("location:transaksi.php");
+echo $id_terakhir;
+header("location:transaksi.php?id=".$id_terakhir."");
 ?>
